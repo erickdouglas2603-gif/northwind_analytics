@@ -1,19 +1,352 @@
 version: 2
 
 sources:
+
   - name: northwind
+    description: Dados transacionais do banco Northwind.
     catalog: dev
     schema: northwind
 
     tables:
+
       - name: raw_categories
+        description: Tabela fonte com as categorias dos produtos.
+        columns:
+
+          - name: CategoryID
+            description: Chave primária da tabela de categorias.
+            data_tests:
+              - unique
+              - not_null
+
+          - name: CategoryName
+            description: Nome da categoria.
+
+          - name: Description
+            description: Descrição da categoria.
+
+          - name: Picture
+            description: Imagem associada à categoria.
+
+          - name: _rescued_data
+            description: Dados que não puderam ser convertidos ou mapeados durante a ingestão.
+
+
       - name: raw_customers
+        description: Tabela fonte com informações dos clientes.
+        columns:
+
+          - name: CustomerID
+            description: Chave primária da tabela de clientes.
+            data_tests:
+              - unique
+              - not_null
+
+          - name: CompanyName
+            description: Nome da empresa do cliente.
+
+          - name: ContactName
+            description: Nome da pessoa de contato.
+
+          - name: ContactTitle
+            description: Cargo da pessoa de contato.
+
+          - name: Address
+            description: Endereço do cliente.
+
+          - name: City
+            description: Cidade do cliente.
+
+          - name: Region
+            description: Região do cliente.
+
+          - name: PostalCode
+            description: Código postal do cliente.
+
+          - name: Country
+            description: País do cliente.
+
+          - name: Phone
+            description: Telefone do cliente.
+
+          - name: Fax
+            description: Fax do cliente.
+
+          - name: _rescued_data
+            description: Dados que não puderam ser convertidos ou mapeados durante a ingestão.
+
+
       - name: raw_employee_territories
+        description: Tabela associativa entre funcionários e territórios.
+        data_tests:
+          - dbt_utils.unique_combination_of_columns:
+              arguments:
+                combination_of_columns:
+                  - EmployeeID
+                  - TerritoryID
+
+        columns:
+
+          - name: EmployeeID
+            description: Identificador do funcionário associado ao território.
+            data_tests:
+              - not_null
+
+          - name: TerritoryID
+            description: Identificador do território associado ao funcionário.
+            data_tests:
+              - not_null
+
+          - name: _rescued_data
+            description: Dados que não puderam ser convertidos ou mapeados durante a ingestão.
+
+
       - name: raw_employees
+        description: Tabela fonte com informações dos funcionários.
+        columns:
+
+          - name: EmployeeID
+            description: Chave primária da tabela de funcionários.
+            data_tests:
+              - unique
+              - not_null
+
+          - name: LastName
+            description: Sobrenome do funcionário.
+
+          - name: FirstName
+            description: Primeiro nome do funcionário.
+
+          - name: Title
+            description: Cargo do funcionário.
+
+          - name: TitleOfCourtesy
+            description: Forma de tratamento do funcionário.
+
+          - name: BirthDate
+            description: Data de nascimento do funcionário.
+
+          - name: HireDate
+            description: Data de contratação do funcionário.
+
+          - name: ReportsTo
+            description: Identificador do funcionário responsável pela gestão.
+
+          - name: _rescued_data
+            description: Dados que não puderam ser convertidos ou mapeados durante a ingestão.
+
+
       - name: raw_order_details
+        description: Tabela associativa entre pedidos e produtos, contendo os itens de cada pedido.
+        data_tests:
+          - dbt_utils.unique_combination_of_columns:
+              arguments:
+                combination_of_columns:
+                  - OrderID
+                  - ProductID
+
+        columns:
+
+          - name: OrderID
+            description: Identificador do pedido.
+            data_tests:
+              - not_null
+
+          - name: ProductID
+            description: Identificador do produto.
+            data_tests:
+              - not_null
+
+          - name: UnitPrice
+            description: Preço unitário do produto no momento do pedido.
+
+          - name: Quantity
+            description: Quantidade do produto no pedido.
+
+          - name: Discount
+            description: Desconto aplicado ao item do pedido.
+
+          - name: _rescued_data
+            description: Dados que não puderam ser convertidos ou mapeados durante a ingestão.
+
+
       - name: raw_orders
+        description: Tabela fonte contendo os pedidos realizados pelos clientes.
+        columns:
+
+          - name: OrderID
+            description: Chave primária do pedido.
+            data_tests:
+              - unique
+              - not_null
+
+          - name: CustomerID
+            description: Identificador do cliente que realizou o pedido.
+
+          - name: EmployeeID
+            description: Identificador do funcionário responsável pelo pedido.
+
+          - name: OrderDate
+            description: Data em que o pedido foi realizado.
+
+          - name: RequiredDate
+            description: Data requerida para entrega do pedido.
+
+          - name: ShippedDate
+            description: Data em que o pedido foi enviado.
+
+          - name: ShipVia
+            description: Identificador da transportadora responsável pelo envio.
+
+          - name: Freight
+            description: Valor do frete do pedido.
+
+          - name: _rescued_data
+            description: Dados que não puderam ser convertidos ou mapeados durante a ingestão.
+
+
       - name: raw_products
+        description: Tabela fonte contendo os produtos comercializados.
+        columns:
+
+          - name: ProductID
+            description: Chave primária do produto.
+            data_tests:
+              - unique
+              - not_null
+
+          - name: ProductName
+            description: Nome do produto.
+
+          - name: SupplierID
+            description: Identificador do fornecedor do produto.
+
+          - name: CategoryID
+            description: Identificador da categoria do produto.
+
+          - name: QuantityPerUnit
+            description: Quantidade ou unidade de comercialização do produto.
+
+          - name: UnitPrice
+            description: Preço unitário do produto.
+
+          - name: UnitsInStock
+            description: Quantidade de unidades atualmente em estoque.
+
+          - name: UnitsOnOrder
+            description: Quantidade de unidades atualmente em pedido.
+
+          - name: ReorderLevel
+            description: Nível de estoque que determina a necessidade de reposição.
+
+          - name: Discontinued
+            description: Indica se o produto foi descontinuado.
+
+          - name: _rescued_data
+            description: Dados que não puderam ser convertidos ou mapeados durante a ingestão.
+
+
       - name: raw_regions
+        description: Tabela fonte contendo as regiões de atuação.
+        columns:
+
+          - name: RegionID
+            description: Chave primária da região.
+            data_tests:
+              - unique
+              - not_null
+
+          - name: RegionDescription
+            description: Descrição da região.
+
+          - name: _rescued_data
+            description: Dados que não puderam ser convertidos ou mapeados durante a ingestão.
+
+
       - name: raw_shippers
+        description: Tabela fonte contendo as transportadoras utilizadas nos pedidos.
+        columns:
+
+          - name: ShipperID
+            description: Chave primária da transportadora.
+            data_tests:
+              - unique
+              - not_null
+
+          - name: CompanyName
+            description: Nome da empresa transportadora.
+
+          - name: Phone
+            description: Telefone da transportadora.
+
+          - name: _rescued_data
+            description: Dados que não puderam ser convertidos ou mapeados durante a ingestão.
+
+
       - name: raw_suppliers
+        description: Tabela fonte contendo os fornecedores dos produtos.
+        columns:
+
+          - name: SupplierID
+            description: Chave primária do fornecedor.
+            data_tests:
+              - unique
+              - not_null
+
+          - name: CompanyName
+            description: Nome da empresa fornecedora.
+
+          - name: ContactName
+            description: Nome da pessoa de contato.
+
+          - name: ContactTitle
+            description: Cargo da pessoa de contato.
+
+          - name: Address
+            description: Endereço do fornecedor.
+
+          - name: City
+            description: Cidade do fornecedor.
+
+          - name: Region
+            description: Região do fornecedor.
+
+          - name: PostalCode
+            description: Código postal do fornecedor.
+
+          - name: Country
+            description: País do fornecedor.
+
+          - name: Phone
+            description: Telefone do fornecedor.
+
+          - name: Fax
+            description: Fax do fornecedor.
+
+          - name: HomePage
+            description: Página web do fornecedor.
+
+          - name: _rescued_data
+            description: Dados que não puderam ser convertidos ou mapeados durante a ingestão.
+
+
       - name: raw_territories
+        description: Tabela fonte contendo os territórios associados às regiões.
+        columns:
+
+          - name: TerritoryID
+            description: Chave primária do território.
+            data_tests:
+              - unique
+              - not_null
+
+          - name: TerritoryDescription
+            description: Descrição do território.
+
+          - name: RegionID
+            description: Identificador da região à qual o território pertence.
+            data_tests:
+              - not_null
+
+          - name: _rescued_data
+            description: Dados que não puderam ser convertidos ou mapeados durante a ingestão.
